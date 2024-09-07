@@ -1,0 +1,19 @@
+.idea
+tmp
+.env
+gohub
+.DS_Store
+.history
+
+# Golang #
+######################
+# `go test -c` 生成的二进制文件
+*.test
+# go coverage 工具
+*.out
+*.prof
+*.cgo1.go
+*.cgo2.c
+_cgo_defun.c
+_cgo_gotypes.go
+_cgo_export.*
