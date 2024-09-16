@@ -17,3 +17,5 @@ _cgo_export.*
 *.log
 *.sqlite
 *.db
+
+conf.yaml
