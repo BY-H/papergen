@@ -1,0 +1,9 @@
+test:
+  databaseHost: localhost:3306
+  databaseUser: cyclopropane
+  password:
+
+main:
+  databaseHost: localhost:3306
+  databaseUser: cyclopropane
+  password:
