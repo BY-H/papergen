@@ -1,9 +1,9 @@
 test:
   databaseHost: localhost:3306
   databaseUser: cyclopropane
-  password:
+  password: 'project-cyclopropane'
 
 main:
   databaseHost: localhost:3306
   databaseUser: cyclopropane
-  password:
+  password: 'project-cyclopropane'
