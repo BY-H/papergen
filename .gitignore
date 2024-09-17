@@ -18,4 +18,5 @@ _cgo_export.*
 *.sqlite
 *.db
 
-conf.yaml
+test-conf.yaml
+main-conf.yaml
