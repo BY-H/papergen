@@ -7,14 +7,13 @@ import (
 )
 
 type JWTClaim struct {
-	Username string `json:"username"`
-	Email    string `json:"email"`
+	Email string `json:"email"`
 	jwt.StandardClaims
 }
 
 func MakeClaimsToken(claims JWTClaim) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(global.JWTKey)
+	tokenString, err := token.SignedString([]byte(global.JWTKey))
 	return tokenString, err
 }
 

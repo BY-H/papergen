@@ -2,6 +2,7 @@ package api
 
 import (
 	"cyclopropane/internal/global"
+	"cyclopropane/internal/middleware"
 	"cyclopropane/internal/models"
 	"errors"
 	"fmt"
@@ -25,7 +26,15 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"msg": "login successfully"})
+	// 返回对应 jwt 密钥
+	token, err := middleware.MakeClaimsToken(middleware.JWTClaim{Email: user.Email})
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token": fmt.Sprintf("beamer %s", token)})
+
+	return
 }
 
 // checkUser 检验用户
