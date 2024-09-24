@@ -12,5 +12,7 @@ func Router() *gin.Engine {
 		middleware.CorsService(),
 	)
 	router.GET("/ping", api.Ping)
+	router.POST("/register", api.Register)
+	router.POST("/login", api.Login)
 	return router
 }

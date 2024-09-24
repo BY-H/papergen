@@ -2,6 +2,7 @@ package global
 
 import (
 	"cyclopropane/config"
+	"cyclopropane/internal/db"
 	"cyclopropane/pkg/utils"
 	"fmt"
 	"go.uber.org/zap"
@@ -10,7 +11,7 @@ import (
 )
 
 var (
-	Env     string       = "test" // 工作环境（main, test）
+	Env     string       = "test" // 工作环境（main, test） TODO 之后得整合到环境变量中
 	WorkDir string                // 工作路径
 	Conf    *config.Conf          // 配置文件
 	DB      *gorm.DB              // 数据库连接
@@ -23,4 +24,5 @@ func init() {
 	Logger, _ = zap.NewProduction()
 	Conf, _ = config.FromYaml(fmt.Sprintf("%s/%s-", WorkDir, Env))
 	JWTKey, _ = utils.GenerateRandomString(32)
+	DB, _ = db.InitDB(Conf.DatabaseHost, Conf.DatabaseUser, Conf.DatabasePassword)
 }
