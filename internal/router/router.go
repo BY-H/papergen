@@ -8,11 +8,16 @@ import (
 
 func Router() *gin.Engine {
 	router := gin.Default()
-	router.Use(
-		middleware.CorsService(),
-	)
-	router.GET("/ping", api.Ping)
+
 	router.POST("/register", api.Register)
 	router.POST("/login", api.Login)
+	router.GET("/ping_without_login", api.Ping)
+
+	authRoutes := router.Group("/")
+	authRoutes.Use(middleware.JWTAuth())
+	{
+		authRoutes.GET("/ping", api.Ping)
+	}
+
 	return router
 }

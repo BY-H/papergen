@@ -32,7 +32,7 @@ func Login(c *gin.Context) {
 		fmt.Println(err)
 	}
 
-	c.JSON(http.StatusOK, gin.H{"token": fmt.Sprintf("beamer %s", token)})
+	c.JSON(http.StatusOK, gin.H{"token": token})
 
 	return
 }
