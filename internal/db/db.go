@@ -1,7 +1,8 @@
 package db
 
 import (
-	"cyclopropane/internal/models"
+	"cyclopropane/internal/models/order"
+	"cyclopropane/internal/models/user"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -18,7 +19,10 @@ func initDB(dsn string) (*gorm.DB, error) {
 		fmt.Printf("%t\n", err)
 		return nil, err
 	}
-	err = db.AutoMigrate(&models.User{})
+	err = db.AutoMigrate(
+		&user.User{},
+		&order.Order{},
+	)
 	if err != nil {
 		return nil, err
 	}

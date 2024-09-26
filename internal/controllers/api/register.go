@@ -2,7 +2,7 @@ package api
 
 import (
 	"cyclopropane/internal/global"
-	"cyclopropane/internal/models"
+	"cyclopropane/internal/models/user"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -11,29 +11,29 @@ import (
 )
 
 func Register(c *gin.Context) {
-	var user models.User
+	var u user.User
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if err := global.DB.First(&models.User{Email: user.Email}).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "user existed"})
+	if err := global.DB.First(&user.User{Email: u.Email}).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "u existed"})
 		return
 	}
 
-	addUser(user)
+	addUser(u)
 	c.JSON(http.StatusOK, gin.H{
 		"msg": "register successfully",
 	})
 }
 
 // addUser　创建用户
-func addUser(user models.User) {
-	user.Password, _ = encryptPassword(user.Password)
+func addUser(u user.User) {
+	u.Password, _ = encryptPassword(u.Password)
 
-	result := global.DB.Create(&user)
+	result := global.DB.Create(&u)
 	if result.Error != nil {
 		global.Logger.Error(result.Error.Error())
 	}

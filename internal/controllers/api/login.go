@@ -3,7 +3,7 @@ package api
 import (
 	"cyclopropane/internal/global"
 	"cyclopropane/internal/middleware"
-	"cyclopropane/internal/models"
+	"cyclopropane/internal/models/user"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -13,21 +13,21 @@ import (
 )
 
 func Login(c *gin.Context) {
-	var user models.User
+	var u user.User
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.ShouldBindJSON(&u); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	// 检验用户
-	if !checkUser(user) {
+	if !checkUser(u) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
 		return
 	}
 
 	// 返回对应 jwt 密钥
-	token, err := middleware.MakeClaimsToken(middleware.JWTClaim{Email: user.Email})
+	token, err := middleware.MakeClaimsToken(middleware.JWTClaim{Email: u.Email})
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -38,9 +38,9 @@ func Login(c *gin.Context) {
 }
 
 // checkUser 检验用户
-func checkUser(user models.User) bool {
-	var dbUser models.User
-	result := global.DB.Where("email = ?", user.Email).First(&dbUser)
+func checkUser(u user.User) bool {
+	var dbUser user.User
+	result := global.DB.Where("email = ?", u.Email).First(&dbUser)
 
 	// 检查是否找到用户
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -54,7 +54,7 @@ func checkUser(user models.User) bool {
 	}
 
 	// 检查密码是否正确
-	err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password))
+	err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(u.Password))
 	if err != nil {
 		fmt.Println(err.Error())
 		return false
