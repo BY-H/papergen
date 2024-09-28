@@ -13,10 +13,11 @@ func Router() *gin.Engine {
 	router.POST("/login", api.Login)
 	router.GET("/ping_without_login", api.Ping)
 
-	authRoutes := router.Group("/")
+	authRoutes := router.Group("/api")
 	authRoutes.Use(middleware.JWTAuth())
 	{
 		authRoutes.GET("/ping", api.Ping)
+		authRoutes.POST("/add_order", api.AddOrder)
 	}
 
 	return router
