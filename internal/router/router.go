@@ -16,8 +16,15 @@ func Router() *gin.Engine {
 	authRoutes := router.Group("/api")
 	authRoutes.Use(middleware.JWTAuth())
 	{
+		// 测试接口
 		authRoutes.GET("/ping", api.Ping)
-		authRoutes.POST("/add_order", api.AddOrder)
+
+		// 订单相关接口
+		orders := authRoutes.Group("/order")
+		{
+			orders.POST("/add", api.AddOrder)
+			orders.GET("/get", api.GetOrder)
+		}
 	}
 
 	return router

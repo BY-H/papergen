@@ -18,7 +18,7 @@ func AddOrder(c *gin.Context) {
 
 	// 检验订单
 	if !o.CheckOrder() {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "订单信息错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "订单信息错误"})
 		return
 	}
 
@@ -29,7 +29,7 @@ func AddOrder(c *gin.Context) {
 
 	err := addOrder(o)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -47,4 +47,20 @@ func addOrder(o order.Order) error {
 		return result.Error
 	}
 	return nil
+}
+
+func GetOrder(c *gin.Context) {
+	// TODO 添加筛选条件
+	var orders []order.Order
+	result := global.DB.Find(&orders)
+	if result.Error != nil {
+		global.Logger.Error(result.Error.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"total": result.RowsAffected,
+		"list":  orders,
+	})
+	return
 }
