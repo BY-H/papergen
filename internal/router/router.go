@@ -24,6 +24,7 @@ func Router() *gin.Engine {
 		{
 			orders.POST("/add", api.AddOrder)
 			orders.GET("/get", api.GetOrder)
+			orders.PATCH("/update", api.StartOrder)
 		}
 	}
 

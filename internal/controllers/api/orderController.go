@@ -22,6 +22,7 @@ func AddOrder(c *gin.Context) {
 		return
 	}
 
+	o.Status = order.STATUS_RECORD
 	// TODO 将获取用户 email 的方法抽到一个统一的文件中
 	id, _ := c.Get("email")
 	creatorId, _ := id.(string)
@@ -63,4 +64,42 @@ func GetOrder(c *gin.Context) {
 		"list":  orders,
 	})
 	return
+}
+
+type updateOrderStatusMessage struct {
+	Ids        []int `json:"ids"`
+	StatusCode int   `json:"status_code"`
+}
+
+func StartOrder(c *gin.Context) {
+	msg := updateOrderStatusMessage{}
+	if err := c.ShouldBindJSON(&msg); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if err := updateOrderStatus(msg); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"ids": msg.Ids,
+	})
+}
+
+func updateOrderStatus(msg updateOrderStatusMessage) error {
+	result := global.DB.Table("orders").
+		Where("id IN ?", msg.Ids).
+		Updates(order.Order{Status: msg.StatusCode})
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
