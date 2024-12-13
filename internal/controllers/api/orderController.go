@@ -1,10 +1,12 @@
 package api
 
 import (
+	"cyclopropane/internal/controllers/message"
 	"cyclopropane/internal/global"
 	"cyclopropane/internal/models/order"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 // AddOrder 创建订单
@@ -23,6 +25,8 @@ func AddOrder(c *gin.Context) {
 	}
 
 	o.Status = order.STATUS_RECORD
+	o.ReportDate = time.Now().Format("2006-01-02")
+
 	// TODO 将获取用户 email 的方法抽到一个统一的文件中
 	id, _ := c.Get("email")
 	creatorId, _ := id.(string)
@@ -34,9 +38,7 @@ func AddOrder(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"creator_id": creatorId,
-	})
+	c.JSON(http.StatusOK, gin.H{})
 
 	return
 }
@@ -50,10 +52,24 @@ func addOrder(o order.Order) error {
 	return nil
 }
 
+// GetOrder 获取订单信息
 func GetOrder(c *gin.Context) {
 	// TODO 添加筛选条件
+	msg := message.OrderMsg{}
+
+	if err := c.ShouldBindQuery(&msg); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	var query = global.DB
+
+	if msg.DateStart != "" && msg.DateEnd != "" {
+		query = query.Where("report_date BETWEEN ? AND ?", msg.DateStart, msg.DateEnd)
+	}
+
 	var orders []order.Order
-	result := global.DB.Find(&orders)
+	result := query.Find(&orders)
 	if result.Error != nil {
 		global.Logger.Error(result.Error.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
@@ -67,8 +83,8 @@ func GetOrder(c *gin.Context) {
 }
 
 type updateOrderStatusMessage struct {
-	Ids        []int `json:"ids"`
-	StatusCode int   `json:"status_code"`
+	Ids        []int  `json:"ids"`
+	StatusCode string `json:"status"`
 }
 
 func StartOrder(c *gin.Context) {

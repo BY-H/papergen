@@ -16,13 +16,13 @@ func Login(c *gin.Context) {
 	var u user.User
 
 	if err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	// 检验用户
 	if !checkUser(u) {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "用户名或密码错误"})
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "用户名或密码错误"})
 		return
 	}
 

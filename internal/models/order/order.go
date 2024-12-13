@@ -5,10 +5,11 @@ import "gorm.io/gorm"
 type Order struct {
 	gorm.Model
 	Platform        string  `gorm:"column:platform;comment:'订单源平台'"`
+	ReportDate      string  `gorm:"column:report_date;index:IDX_REPORT_DATE;comment:'下单日期'"`
 	AccountID       string  `gorm:"column:account_id;comment:'用户三方平台账号'"`
 	AccountPassword string  `gorm:"column:account_password;comment:'用户三方登录密码'"`
 	Url             string  `gorm:"column:url;comment:'用户url'"`
-	Status          int     `gorm:"column:status;comment:'订单状态';default:0"`
+	Status          string  `gorm:"column:status;comment:'订单状态'"`
 	Amount          int     `gorm:"column:amount;comment:'订单题数'"`
 	Accuracy        float64 `gorm:"column:accuracy;comment:'订单正确率'"`
 	Money           float64 `gorm:"column:money;comment:'订单金额'"`
@@ -18,22 +19,13 @@ type Order struct {
 }
 
 const (
-	STATUS_CLOSE = iota
-	STATUS_RECORD
-	STATUS_WORKING
-	STATUS_FINISHED
-	STATUS_CHECK
-	STATUS_DOWN
+	STATUS_CLOSE    = "CLOSE"
+	STATUS_RECORD   = "RECORD"
+	STATUS_WORKING  = "WORKING"
+	STATUS_FINISHED = "FINISHED"
+	STATUS_CHECK    = "CHECK"
+	STATUS_DOWN     = "DOWN"
 )
-
-var STATUS_MAPPING = map[int]string{
-	STATUS_CLOSE:    "STATUS_CLOSE",    // 订单关闭
-	STATUS_RECORD:   "STATUS_RECORD",   // 订单已记录
-	STATUS_WORKING:  "STATUS_WORKING",  // 订单处理中
-	STATUS_FINISHED: "STATUS_FINISHED", // 订单已完成
-	STATUS_CHECK:    "STATUS_CHECK",    // 订单已审查
-	STATUS_DOWN:     "STATUS_DOWN",     // 订单已分销
-}
 
 const (
 	PLATFORM_QINGMA = iota
@@ -44,6 +36,7 @@ var PLATFORM_MAPPING = map[int]string{
 }
 
 func (o Order) CheckOrder() bool {
+	o.formalCheck()
 	switch o.Platform {
 	case PLATFORM_MAPPING[PLATFORM_QINGMA]:
 		return checkQingmaOrder(o)
@@ -53,15 +46,20 @@ func (o Order) CheckOrder() bool {
 	}
 }
 
-func checkQingmaOrder(o Order) bool {
-	// 青马渠道现在以 url 作为刷题依据，所以必须要有 url
-	if o.Url == "" {
-		return false
-	}
+// 通用检测
+func (o Order) formalCheck() bool {
 	if o.Amount == 0 {
 		return false
 	}
 	if o.Accuracy == 0 {
+		return false
+	}
+	return true
+}
+
+func checkQingmaOrder(o Order) bool {
+	// 青马渠道现在以 url 作为刷题依据，所以必须要有 url
+	if o.Url == "" {
 		return false
 	}
 	return true

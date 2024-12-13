@@ -54,7 +54,7 @@ func JWTAuth() gin.HandlerFunc {
 		authHeader := c.Request.Header.Get("authorization")
 		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"msg": "请求头中auth为空",
+				"message": "请求头中auth为空",
 			})
 			c.Abort()
 			return
@@ -63,7 +63,7 @@ func JWTAuth() gin.HandlerFunc {
 		parts := strings.Split(authHeader, " ")
 		if len(parts) != 2 || parts[0] != "Bearer" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"msg": "请求头中auth格式有误",
+				"message": "请求头中auth格式有误",
 			})
 			c.Abort()
 			return
@@ -72,7 +72,7 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := ParseClaimsToken(parts[1])
 		if err != nil {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"msg": "无效的token",
+				"message": "无效的token",
 			})
 			c.Abort()
 			return

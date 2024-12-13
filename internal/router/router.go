@@ -22,8 +22,8 @@ func Router() *gin.Engine {
 		// 订单相关接口
 		orders := authRoutes.Group("/order")
 		{
+			orders.GET("/", api.GetOrder)
 			orders.POST("/add", api.AddOrder)
-			orders.GET("/get", api.GetOrder)
 			orders.PATCH("/update", api.StartOrder)
 		}
 	}
