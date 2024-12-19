@@ -22,7 +22,7 @@ func Login(c *gin.Context) {
 
 	// 检验用户
 	if !checkUser(u) {
-		c.JSON(http.StatusUnauthorized, gin.H{"message": "用户名或密码错误"})
+		c.JSON(http.StatusForbidden, gin.H{"message": "用户名或密码错误"})
 		return
 	}
 

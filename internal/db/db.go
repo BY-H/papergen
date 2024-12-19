@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func InitDB(host string, username string, password string) (*gorm.DB, error) {
@@ -14,7 +15,9 @@ func InitDB(host string, username string, password string) (*gorm.DB, error) {
 }
 
 func initDB(dsn string) (*gorm.DB, error) {
-	db, err := gorm.Open(mysql.Open(dsn))
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Info), // 设置日志级别为 Info
+	})
 	if err != nil {
 		fmt.Printf("%t\n", err)
 		return nil, err

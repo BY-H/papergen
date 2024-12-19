@@ -28,17 +28,13 @@ const (
 )
 
 const (
-	PLATFORM_QINGMA = iota
+	PLATFORM_QINGMA = "PLATFORM_QINGMA"
 )
-
-var PLATFORM_MAPPING = map[int]string{
-	PLATFORM_QINGMA: "PLATFORM_QINGMA", //青马易站渠道
-}
 
 func (o Order) CheckOrder() bool {
 	o.formalCheck()
 	switch o.Platform {
-	case PLATFORM_MAPPING[PLATFORM_QINGMA]:
+	case PLATFORM_QINGMA:
 		return checkQingmaOrder(o)
 	default:
 		// 未知订单来源
@@ -48,18 +44,18 @@ func (o Order) CheckOrder() bool {
 
 // 通用检测
 func (o Order) formalCheck() bool {
-	if o.Amount == 0 {
-		return false
-	}
-	if o.Accuracy == 0 {
-		return false
-	}
 	return true
 }
 
 func checkQingmaOrder(o Order) bool {
 	// 青马渠道现在以 url 作为刷题依据，所以必须要有 url
 	if o.Url == "" {
+		return false
+	}
+	if o.Amount == 0 {
+		return false
+	}
+	if o.Accuracy == 0 {
 		return false
 	}
 	return true

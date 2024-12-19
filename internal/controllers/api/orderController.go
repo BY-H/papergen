@@ -62,21 +62,40 @@ func GetOrder(c *gin.Context) {
 		return
 	}
 
-	var query = global.DB
+	var builder = global.DB.Model(&order.Order{})
 
 	if msg.DateStart != "" && msg.DateEnd != "" {
-		query = query.Where("report_date BETWEEN ? AND ?", msg.DateStart, msg.DateEnd)
+		builder = builder.Where("report_date BETWEEN ? AND ?", msg.DateStart, msg.DateEnd)
 	}
 
-	var orders []order.Order
-	result := query.Find(&orders)
-	if result.Error != nil {
-		global.Logger.Error(result.Error.Error())
-		c.JSON(http.StatusBadRequest, gin.H{"error": result.Error.Error()})
+	// 分页
+	page := msg.Page
+	if page == 0 {
+		page = 1
+	}
+	pageSize := msg.PageSize
+	if pageSize == 0 {
+		pageSize = 20
+	}
+
+	var total int64
+	if err := builder.Count(&total).Error; err != nil {
+		global.Logger.Error(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to count records"})
 		return
 	}
+
+	// 查询分页数据
+	var orders []order.Order
+	query := builder.Offset((page - 1) * pageSize).Limit(pageSize)
+	if err := query.Find(&orders).Error; err != nil {
+		global.Logger.Error(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"total": result.RowsAffected,
+		"total": total,
 		"list":  orders,
 	})
 	return
