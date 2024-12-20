@@ -27,11 +27,6 @@ func AddOrder(c *gin.Context) {
 	o.Status = order.STATUS_RECORD
 	o.ReportDate = time.Now().Format("2006-01-02")
 
-	// TODO 将获取用户 email 的方法抽到一个统一的文件中
-	id, _ := c.Get("email")
-	creatorId, _ := id.(string)
-	o.CreatorID = creatorId
-
 	err := addOrder(o)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -87,7 +82,7 @@ func GetOrder(c *gin.Context) {
 
 	// 查询分页数据
 	var orders []order.Order
-	query := builder.Offset((page - 1) * pageSize).Limit(pageSize)
+	query := builder.Order("id desc").Offset((page - 1) * pageSize).Limit(pageSize)
 	if err := query.Find(&orders).Error; err != nil {
 		global.Logger.Error(err.Error())
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
