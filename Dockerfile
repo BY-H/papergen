@@ -14,7 +14,7 @@ ADD go.mod .
 ADD go.sum .
 RUN go mod download
 COPY . .
-RUN go build -ldflags="-s -w" -o /app/server ./cmd/cyclopropane/server.go
+RUN go build -ldflags="-s -w" -o /app/server ./cmd/papergen/server.go
 
 
 FROM scratch

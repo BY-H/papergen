@@ -1,12 +1,12 @@
 package global
 
 import (
-	"cyclopropane/config"
-	"cyclopropane/internal/db"
 	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"os"
+	"papergen/config"
+	"papergen/internal/db"
 )
 
 var (

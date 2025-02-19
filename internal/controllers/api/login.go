@@ -1,15 +1,15 @@
 package api
 
 import (
-	"cyclopropane/internal/global"
-	"cyclopropane/internal/middleware"
-	"cyclopropane/internal/models/user"
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
+	"papergen/internal/global"
+	"papergen/internal/middleware"
+	"papergen/internal/models/user"
 )
 
 func Login(c *gin.Context) {

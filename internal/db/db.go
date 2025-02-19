@@ -1,16 +1,17 @@
 package db
 
 import (
-	"cyclopropane/internal/models/order"
-	"cyclopropane/internal/models/user"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"papergen/internal/models/paper"
+	"papergen/internal/models/question"
+	"papergen/internal/models/user"
 )
 
 func InitDB(host string, username string, password string) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/cyclopropane?charset=utf8&parseTime=True", username, password, host)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/papergen?charset=utf8&parseTime=True", username, password, host)
 	return initDB(dsn)
 }
 
@@ -22,9 +23,11 @@ func initDB(dsn string) (*gorm.DB, error) {
 		fmt.Printf("%t\n", err)
 		return nil, err
 	}
+	// 自动迁移
 	err = db.AutoMigrate(
 		&user.User{},
-		&order.Order{},
+		&question.Question{},
+		&paper.Paper{},
 	)
 	if err != nil {
 		return nil, err

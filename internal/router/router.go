@@ -1,9 +1,9 @@
 package router
 
 import (
-	"cyclopropane/internal/controllers/api"
-	"cyclopropane/internal/middleware"
 	"github.com/gin-gonic/gin"
+	"papergen/internal/controllers/api"
+	"papergen/internal/middleware"
 )
 
 func Router() *gin.Engine {
@@ -18,14 +18,6 @@ func Router() *gin.Engine {
 	{
 		// 测试接口
 		authRoutes.GET("/ping", api.Ping)
-
-		// 订单相关接口
-		orders := authRoutes.Group("/order")
-		{
-			orders.GET("/list", api.GetOrder)
-			orders.POST("/add", api.AddOrder)
-			orders.PATCH("/update", api.StartOrder)
-		}
 	}
 
 	return router

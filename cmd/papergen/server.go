@@ -1,8 +1,8 @@
 package main
 
 import (
-	"cyclopropane/internal/router"
 	"log"
+	"papergen/internal/router"
 )
 
 func main() {

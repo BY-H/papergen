@@ -1,12 +1,12 @@
 package middleware
 
 import (
-	"cyclopropane/internal/global"
 	"errors"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"papergen/internal/global"
 	"strings"
 	"time"
 )

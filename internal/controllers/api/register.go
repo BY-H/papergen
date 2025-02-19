@@ -1,13 +1,13 @@
 package api
 
 import (
-	"cyclopropane/internal/global"
-	"cyclopropane/internal/models/user"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
+	"papergen/internal/global"
+	"papergen/internal/models/user"
 )
 
 func Register(c *gin.Context) {

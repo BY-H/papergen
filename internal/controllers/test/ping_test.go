@@ -1,12 +1,12 @@
 package test
 
 import (
-	"cyclopropane/internal/controllers/api"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"
 	"net/http"
 	"net/http/httptest"
+	"papergen/internal/controllers/api"
 	"testing"
 )
 
