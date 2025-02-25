@@ -8,7 +8,19 @@
 
 ### 直接部署
 
-Windows下，可以通过直接编译项目来进行部署
+#### Windows
+
+在 Windows 下，可以通过安装Go环境，然后直接编译项目：
+
+`go build -o _output/papergen.exe cmd/papergen/main.go`
+
+运行对应的 `_output/papergen.exe` 即可完成部署
+
+#### Linux
+
+在 Linux 下，可以直接通过 Makefile 进行构建，直接执行 `make` 即可完成构建
+
+执行 `make clean` 即可清除构建产物
 
 ### Docker 部署
 
