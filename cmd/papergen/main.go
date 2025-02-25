@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	_ "papergen/internal/global"
 	"papergen/internal/router"
 )
 
