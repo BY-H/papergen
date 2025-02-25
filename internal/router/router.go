@@ -18,6 +18,7 @@ func Router() *gin.Engine {
 	{
 		// 测试接口
 		authRoutes.GET("/ping", api.Ping)
+		authRoutes.GET("/papers", api.Papers)
 	}
 
 	return router

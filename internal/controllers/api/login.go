@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"net/http"
+	"papergen/internal/controllers/message"
 	"papergen/internal/global"
 	"papergen/internal/middleware"
 	"papergen/internal/models/user"
@@ -16,7 +17,7 @@ func Login(c *gin.Context) {
 	var u user.User
 
 	if err := c.ShouldBindJSON(&u); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return
 	}
 
