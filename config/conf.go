@@ -10,6 +10,8 @@ type Conf struct {
 	DatabaseUser     string `yaml:"database-user"`
 	DatabasePassword string `yaml:"database-password"`
 	JWTKey           string `yaml:"jwt-key"`
+	Host             string `yaml:"host"`
+	Port             string `yaml:"port"`
 }
 
 func FromYaml(dir string) (*Conf, error) {

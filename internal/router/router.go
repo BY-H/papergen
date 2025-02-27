@@ -9,6 +9,7 @@ import (
 func Router() *gin.Engine {
 	router := gin.Default()
 
+	router.Use(middleware.CORS())
 	router.POST("/register", api.Register)
 	router.POST("/login", api.Login)
 	router.GET("/ping_without_login", api.Ping)
