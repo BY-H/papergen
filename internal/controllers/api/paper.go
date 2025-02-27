@@ -10,6 +10,7 @@ import (
 
 // Papers 返回用户创建过的试卷
 func Papers(c *gin.Context) {
+	// TODO 添加对应条件的查找功能
 	email, _ := c.Get("email")
 	var msg message.RequestMsg
 	err := c.BindJSON(&msg)

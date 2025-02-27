@@ -19,7 +19,11 @@ func Router() *gin.Engine {
 	{
 		authRoutes.GET("/ping", api.Ping)
 		// 试卷相关
-		authRoutes.GET("/papers", api.Papers)
+		papers := authRoutes.Group("/papers")
+		{
+			papers.GET("/", api.Papers)
+			papers.POST("/add", api.CreatePaper)
+		}
 		// 试题相关
 		authRoutes.GET("/questions", api.Questions)
 	}
