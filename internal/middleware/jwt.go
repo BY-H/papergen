@@ -51,6 +51,10 @@ func ParseClaimsToken(tokenStr string) (*JWTClaim, error) {
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if c.Request.Method == "OPTIONS" {
+			c.Next()
+			return
+		}
 		authHeader := c.Request.Header.Get("authorization")
 		if authHeader == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
