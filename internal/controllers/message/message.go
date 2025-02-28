@@ -9,13 +9,6 @@ type RequestMsg struct {
 	PageSize  int    `json:"page_size" form:"page_size" default:"20"`
 }
 
-type OrderMsg struct {
-	RequestMsg
-}
-
-type ResponseMsg struct {
-}
-
 func ErrorResponse(err error) gin.H {
 	return gin.H{
 		"status": "error",
