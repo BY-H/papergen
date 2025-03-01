@@ -23,6 +23,8 @@ func Router() *gin.Engine {
 		{
 			papers.GET("/", api.Papers)
 			papers.POST("/add", api.CreatePaper)
+			papers.PATCH("/edit", api.EditPaper)
+			papers.DELETE("/delete", api.RemovePaper)
 		}
 		// 试题相关
 		questions := authRoutes.Group("/questions")

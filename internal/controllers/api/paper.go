@@ -35,6 +35,10 @@ func CreatePaper(c *gin.Context) {
 	c.Get("email")
 }
 
+func EditPaper(c *gin.Context) {
+
+}
+
 // RemovePaper 移除试卷
 func RemovePaper(c *gin.Context) {
 
