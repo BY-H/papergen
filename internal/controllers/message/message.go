@@ -15,3 +15,25 @@ func ErrorResponse(err error) gin.H {
 		"error":  err,
 	}
 }
+
+type AddQuestionMsg struct {
+	Question     string `json:"question" form:"question"`
+	QuestionType string `json:"question_type" form:"question_type"`
+	Answer       string `json:"answer" form:"answer"`
+	HardLevel    int    `json:"hard_level" form:"hard_level"`
+	Score        int    `json:"score" form:"score"`
+	Tag          string `json:"tag" form:"tag"`
+}
+
+func (m *AddQuestionMsg) Check() bool {
+	if m.Question == "" {
+		return false
+	}
+	if m.QuestionType == "" {
+		return false
+	}
+	if m.Answer == "" {
+		return false
+	}
+	return true
+}

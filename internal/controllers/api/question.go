@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"papergen/internal/controllers/message"
 	"papergen/internal/global"
@@ -13,7 +15,7 @@ func Questions(c *gin.Context) {
 	var msg message.RequestMsg
 	err := c.BindJSON(&msg)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, message.ErrorResponse)
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return
 	}
 	var questions []question.Question
@@ -29,8 +31,28 @@ func Questions(c *gin.Context) {
 }
 
 func AddQuestion(c *gin.Context) {
-	c.Get("email")
+	e, _ := c.Get("email")
+	email := e.(string)
+	msg := &message.AddQuestionMsg{}
+	err := c.BindJSON(msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
+	if !msg.Check() {
+		err = fmt.Errorf("question format error")
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+	}
 
+	question := question.Question{
+		Question:     msg.Question,
+		QuestionType: (msg.QuestionType),
+		Answer:       "",
+		HardLevel:    0,
+		Score:        0,
+		Tag:          "",
+		Creator:      email,
+	}
 }
 
 func DeleteQuestion(c *gin.Context) {}
