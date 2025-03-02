@@ -34,7 +34,7 @@ type Question struct {
 	HardLevel    int    `gorm:"column:hard_level;comment:'难度'" json:"hard_level"`
 	Score        int    `gorm:"column:score;comment:'分值'" json:"score"`
 	Tag          string `gorm:"column:tag;comment:'题目标签'" json:"tag"`
-	Creator      string `gorm:"creator;comment:'题目创建人'" json:"creator"`
+	Creator      string `gorm:"column:creator;comment:'题目创建人'" json:"creator"`
 }
 
 // BeforeCreate 创建 Question 时验证 QuestionType

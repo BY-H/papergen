@@ -7,6 +7,8 @@ import (
 	"papergen/internal/controllers/message"
 	"papergen/internal/global"
 	"papergen/internal/models/question"
+	"papergen/pkg/utils"
+	"strings"
 )
 
 func Questions(c *gin.Context) {
@@ -61,6 +63,27 @@ func AddQuestion(c *gin.Context) {
 
 func DeleteQuestion(c *gin.Context) {
 	e, _ := c.Get("email")
+	email := e.(string)
+	msg := message.DeleteQuestionMsg{}
+	err := c.BindJSON(&msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
+
+	temp := strings.Split(msg.IDs, ",")
+	ids, err := utils.StringArrToIntArr(temp)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
+
+	global.DB.Where("creator = ?", email).Delete(&question.Question{}, ids)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "delete question successfully",
+	})
 }
 
-func EditQuestion(c *gin.Context) {}
+func EditQuestion(c *gin.Context) {
+
+}

@@ -25,6 +25,14 @@ type AddQuestionMsg struct {
 	Tag          string `json:"tag" form:"tag"`
 }
 
+type DeleteQuestionMsg struct {
+	IDs string `json:"question_ids"`
+}
+
+type EditQuestionMsg struct {
+	ID int
+}
+
 func (m *AddQuestionMsg) Check() bool {
 	if m.Question == "" {
 		return false
