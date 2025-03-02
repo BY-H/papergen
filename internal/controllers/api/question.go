@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 	"net/http"
 	"papergen/internal/controllers/message"
 	"papergen/internal/global"
@@ -44,17 +43,24 @@ func AddQuestion(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 	}
 
-	question := question.Question{
+	q := question.Question{
 		Question:     msg.Question,
-		QuestionType: (msg.QuestionType),
-		Answer:       "",
-		HardLevel:    0,
-		Score:        0,
-		Tag:          "",
+		QuestionType: question.Type(msg.QuestionType),
+		Answer:       msg.Answer,
+		HardLevel:    msg.HardLevel,
+		Score:        msg.Score,
+		Tag:          msg.Tag,
 		Creator:      email,
 	}
+
+	global.DB.Create(&q)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "add question successfully",
+	})
 }
 
-func DeleteQuestion(c *gin.Context) {}
+func DeleteQuestion(c *gin.Context) {
+	e, _ := c.Get("email")
+}
 
 func EditQuestion(c *gin.Context) {}
