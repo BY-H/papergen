@@ -85,5 +85,26 @@ func DeleteQuestion(c *gin.Context) {
 }
 
 func EditQuestion(c *gin.Context) {
+	e, _ := c.Get("email")
+	email := e.(string)
+	msg := message.EditQuestionMsg{}
+	err := c.BindJSON(&msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
 
+	q := question.Question{
+		Question:     msg.Question,
+		QuestionType: msg.QuestionType,
+		Answer:       msg.Answer,
+		HardLevel:    msg.HardLevel,
+		Score:        msg.Score,
+		Tag:          msg.Tag,
+		Creator:      email,
+	}
+	global.DB.Where("creator = ?", email).Save(&q)
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "update question successfully",
+	})
 }
