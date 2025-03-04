@@ -72,8 +72,15 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if err := global.DB.First(&user.User{Email: u.Email}).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": "u existed"})
+	if u.Email == "" || u.Password == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "邮箱或密码不合法"})
+		return
+	}
+
+	var count int64
+	global.DB.Model(&user.User{}).Where("email = ?", u.Email).Count(&count)
+	if count > 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "账号已存在"})
 		return
 	}
 

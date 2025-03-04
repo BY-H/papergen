@@ -96,7 +96,7 @@ func EditQuestion(c *gin.Context) {
 
 	q := question.Question{
 		Question:     msg.Question,
-		QuestionType: msg.QuestionType,
+		QuestionType: question.Type(msg.QuestionType),
 		Answer:       msg.Answer,
 		HardLevel:    msg.HardLevel,
 		Score:        msg.Score,
