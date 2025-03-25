@@ -30,11 +30,21 @@ func Papers(c *gin.Context) {
 	return
 }
 
+// PapersSummary 试卷简要汇总信息
+func PapersSummary(c *gin.Context) {
+	var count int64
+	global.DB.Model(&paper.Paper{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{
+		"total": count,
+	})
+}
+
 // CreatePaper 创建试卷
 func CreatePaper(c *gin.Context) {
 	c.Get("email")
 }
 
+// EditPaper 编辑试卷
 func EditPaper(c *gin.Context) {
 
 }

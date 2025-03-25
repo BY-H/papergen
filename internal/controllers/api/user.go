@@ -108,3 +108,12 @@ func encryptPassword(pwd string) (string, error) {
 	}
 	return string(encrypt), err
 }
+
+// UsersSummary 用户简要汇总信息
+func UsersSummary(c *gin.Context) {
+	var count int64
+	global.DB.Model(&user.User{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{
+		"total": count,
+	})
+}

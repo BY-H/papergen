@@ -108,3 +108,11 @@ func EditQuestion(c *gin.Context) {
 		"msg": "update question successfully",
 	})
 }
+
+func QuestionSummary(c *gin.Context) {
+	var count int64
+	global.DB.Model(&question.Question{}).Count(&count)
+	c.JSON(http.StatusOK, gin.H{
+		"total": count,
+	})
+}
