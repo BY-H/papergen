@@ -15,8 +15,8 @@ func Notifications(c *gin.Context) {
 	global.DB.Find(&notifications)
 
 	c.JSON(http.StatusOK, gin.H{
-		"total":         len(notifications),
-		"notifications": notifications,
+		"total": len(notifications),
+		"list":  notifications,
 	})
 }
 
