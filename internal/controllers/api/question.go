@@ -35,7 +35,7 @@ func AddQuestion(c *gin.Context) {
 	e, _ := c.Get("email")
 	email := e.(string)
 	msg := &message.AddQuestionMsg{}
-	err := c.BindJSON(msg)
+	err := c.BindJSON(&msg)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return

@@ -51,3 +51,9 @@ func (m *AddQuestionMsg) Check() bool {
 	}
 	return true
 }
+
+type AddNotificationMsg struct {
+	Type    string `json:"type"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
+}

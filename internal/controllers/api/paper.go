@@ -21,9 +21,12 @@ func Papers(c *gin.Context) {
 	var papers []paper.Paper
 	global.DB.Where("creator = ?", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&papers)
 
+	var count int64
+	global.DB.Where("creator = ?", email).Count(&count)
 	c.JSON(http.StatusOK, gin.H{
 		"page":      msg.Page,
 		"page_size": msg.PageSize,
+		"total":     count,
 		"list":      papers,
 	})
 

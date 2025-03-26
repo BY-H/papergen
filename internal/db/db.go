@@ -7,6 +7,7 @@ import (
 	"gorm.io/gorm/logger"
 	"papergen/internal/models/paper"
 	"papergen/internal/models/question"
+	"papergen/internal/models/system"
 	"papergen/internal/models/user"
 )
 
@@ -28,6 +29,7 @@ func initDB(dsn string) (*gorm.DB, error) {
 		&user.User{},
 		&question.Question{},
 		&paper.Paper{},
+		&system.Notification{},
 	)
 	fmt.Printf("test db init\n")
 	if err != nil {

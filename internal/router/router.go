@@ -23,6 +23,15 @@ func Router() *gin.Engine {
 		{
 			users.GET("/summary", api.UsersSummary)
 		}
+		// 系统相关
+		system := authRoutes.Group("/system")
+		{
+			notification := system.Group("/notifications")
+			{
+				notification.GET("/", api.Notifications)
+				notification.POST("/add", api.AddNotification)
+			}
+		}
 		// 试卷相关
 		papers := authRoutes.Group("/papers")
 		{
