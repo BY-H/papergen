@@ -31,6 +31,11 @@ func Router() *gin.Engine {
 				notification.GET("/", api.Notifications)
 				notification.POST("/add", api.AddNotification)
 			}
+			feedback := system.Group("/feedbacks")
+			{
+				feedback.GET("/", api.Feedbacks)
+				feedback.POST("/add", api.AddFeedback)
+			}
 		}
 		// 试卷相关
 		papers := authRoutes.Group("/papers")

@@ -8,3 +8,8 @@ type Notification struct {
 	Title   string `gorm:"column:title;comment:'标题'" json:"title"`
 	Content string `gorm:"column:content;comment:'正文'" json:"content"`
 }
+
+type Feedback struct {
+	gorm.Model
+	Content string `gorm:"column:content"`
+}

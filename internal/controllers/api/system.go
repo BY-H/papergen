@@ -25,7 +25,10 @@ func AddNotification(c *gin.Context) {
 	email := e.(string)
 	err := checkRole(email)
 	if err != nil {
-
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
 	}
 	msg := &message.AddNotificationMsg{}
 	err = c.BindJSON(&msg)
@@ -50,4 +53,35 @@ func checkRole(email string) error {
 		return nil
 	}
 	return fmt.Errorf("this user is not admin user")
+}
+
+func Feedbacks(c *gin.Context) {
+	var feedbacks []system.Feedback
+	global.DB.Find(&feedbacks)
+
+	c.JSON(http.StatusOK, gin.H{
+		"total": len(feedbacks),
+		"list":  feedbacks,
+	})
+}
+
+func AddFeedback(c *gin.Context) {
+	msg := message.AddFeedbackMsg{}
+	err := c.BindJSON(&msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	f := system.Feedback{
+		Content: msg.Content,
+	}
+
+	global.DB.Save(&f)
+
+	c.JSON(http.StatusOK, gin.H{
+		"msg": "add successfully",
+	})
 }

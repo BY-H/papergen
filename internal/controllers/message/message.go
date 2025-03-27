@@ -57,3 +57,7 @@ type AddNotificationMsg struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
+
+type AddFeedbackMsg struct {
+	Content string `json:"content"`
+}
