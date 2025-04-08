@@ -14,13 +14,13 @@ import (
 func Questions(c *gin.Context) {
 	email, _ := c.Get("email")
 	var msg message.RequestMsg
-	err := c.BindJSON(&msg)
+	err := c.BindQuery(&msg)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return
 	}
 	var questions []question.Question
-	global.DB.Where("email = ?", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&questions)
+	global.DB.Where("creator = ? or creator = 'system'", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&questions)
 
 	c.JSON(http.StatusOK, gin.H{
 		"page":      msg.Page,

@@ -28,19 +28,19 @@ func Router() *gin.Engine {
 		{
 			notification := system.Group("/notifications")
 			{
-				notification.GET("/", api.Notifications)
+				notification.GET("/list", api.Notifications)
 				notification.POST("/add", api.AddNotification)
 			}
 			feedback := system.Group("/feedbacks")
 			{
-				feedback.GET("/", api.Feedbacks)
+				feedback.GET("/list", api.Feedbacks)
 				feedback.POST("/add", api.AddFeedback)
 			}
 		}
 		// 试卷相关
 		papers := authRoutes.Group("/papers")
 		{
-			papers.GET("/", api.Papers)
+			papers.GET("/list", api.Papers)
 			papers.GET("/summary", api.PapersSummary)
 			papers.POST("/add", api.CreatePaper)
 			papers.PATCH("/edit", api.EditPaper)
@@ -49,7 +49,7 @@ func Router() *gin.Engine {
 		// 试题相关
 		questions := authRoutes.Group("/questions")
 		{
-			questions.GET("/", api.Questions)
+			questions.GET("/list", api.Questions)
 			questions.GET("/summary", api.QuestionSummary)
 			questions.POST("/add", api.AddQuestion)
 			questions.PATCH("/edit", api.EditQuestion)

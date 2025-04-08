@@ -14,12 +14,13 @@ const (
 	TypeMultipleChoice Type = "multiple_choice"
 	TypeTrueFalse      Type = "true_false"
 	TypeShortAnswer    Type = "short_answer"
+	TypeFillBlank      Type = "fill_blank"
 )
 
 // 验证 questionType 是否合法
 func (qt Type) isValid() error {
 	switch qt {
-	case TypeSingleChoice, TypeMultipleChoice, TypeTrueFalse, TypeShortAnswer:
+	case TypeSingleChoice, TypeMultipleChoice, TypeTrueFalse, TypeShortAnswer, TypeFillBlank:
 		return nil
 	default:
 		return errors.New("invalid question type")
