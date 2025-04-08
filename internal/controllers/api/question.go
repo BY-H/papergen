@@ -21,11 +21,13 @@ func Questions(c *gin.Context) {
 	}
 	var questions []question.Question
 	global.DB.Where("creator = ? or creator = 'system'", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&questions)
-
+	var count int64
+	global.DB.Model(&question.Question{}).Count(&count)
 	c.JSON(http.StatusOK, gin.H{
 		"page":      msg.Page,
 		"page_size": msg.PageSize,
 		"list":      questions,
+		"total":     count,
 	})
 
 	return
