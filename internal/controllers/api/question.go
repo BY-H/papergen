@@ -50,6 +50,7 @@ func AddQuestion(c *gin.Context) {
 	q := question.Question{
 		Question:     msg.Question,
 		QuestionType: question.Type(msg.QuestionType),
+		Options:      msg.Options,
 		Answer:       msg.Answer,
 		HardLevel:    msg.HardLevel,
 		Score:        msg.Score,
@@ -59,7 +60,8 @@ func AddQuestion(c *gin.Context) {
 
 	global.DB.Create(&q)
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "add question successfully",
+		"status": "ok",
+		"msg":    "add question successfully",
 	})
 }
 

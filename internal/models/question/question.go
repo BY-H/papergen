@@ -31,6 +31,7 @@ type Question struct {
 	gorm.Model
 	Question     string `gorm:"column:question;comment:'题目正文'" json:"question"`
 	QuestionType Type   `gorm:"column:question_type;comment:'题目类型'" json:"question_type"`
+	Options      string `gorm:"column:options;comment:'题目选项'" json:"options"`
 	Answer       string `gorm:"column:answer;comment:'答案'" json:"answer"`
 	HardLevel    int    `gorm:"column:hard_level;comment:'难度'" json:"hard_level"`
 	Score        int    `gorm:"column:score;comment:'分值'" json:"score"`
