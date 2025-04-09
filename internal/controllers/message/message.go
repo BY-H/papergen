@@ -31,9 +31,10 @@ type DeleteQuestionMsg struct {
 }
 
 type EditQuestionMsg struct {
-	ID           int    `json:"question_id"`
+	ID           int    `json:"ID" form:"ID"`
 	Question     string `json:"question" form:"question"`
 	QuestionType string `json:"question_type" form:"question_type"`
+	Options      string `json:"options" form:"options"`
 	Answer       string `json:"answer" form:"answer"`
 	HardLevel    int    `json:"hard_level" form:"hard_level"`
 	Score        int    `json:"score" form:"score"`

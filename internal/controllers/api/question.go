@@ -1,8 +1,10 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"papergen/internal/controllers/message"
 	"papergen/internal/global"
@@ -49,7 +51,7 @@ func AddQuestion(c *gin.Context) {
 
 	q := question.Question{
 		Question:     msg.Question,
-		QuestionType: question.Type(msg.QuestionType),
+		QuestionType: msg.QuestionType,
 		Options:      msg.Options,
 		Answer:       msg.Answer,
 		HardLevel:    msg.HardLevel,
@@ -98,18 +100,45 @@ func EditQuestion(c *gin.Context) {
 		return
 	}
 
-	q := question.Question{
+	// 先检查问题是否存在且属于该用户
+	var existingQuestion question.Question
+	result := global.DB.Where("creator = ? AND id = ?", email, msg.ID).First(&existingQuestion)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{"error": "question not found or not owned by user"})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "database error"})
+		}
+		return
+	}
+
+	// 更新字段
+	updates := question.Question{
 		Question:     msg.Question,
-		QuestionType: question.Type(msg.QuestionType),
+		QuestionType: msg.QuestionType,
+		Options:      msg.Options,
 		Answer:       msg.Answer,
 		HardLevel:    msg.HardLevel,
 		Score:        msg.Score,
 		Tag:          msg.Tag,
-		Creator:      email,
+		// 注意不要更新 Creator，因为创建者不应该改变
 	}
-	global.DB.Where("creator = ?", email).Save(&q)
+
+	// 执行更新
+	result = global.DB.Model(&question.Question{}).
+		Where("id = ? AND creator = ?", msg.ID, email).
+		Updates(updates)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		fmt.Println(updates.QuestionType)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "update failed"})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "update question successfully",
+		"status": "ok",
+		"msg":    "update question successfully",
 	})
 }
 
