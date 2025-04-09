@@ -150,3 +150,12 @@ func QuestionSummary(c *gin.Context) {
 		"total": count,
 	})
 }
+
+func QuestionTags(c *gin.Context) {
+	var result []string
+	global.DB.Model(&question.Question{}).Distinct("tag").Pluck("tag", &result)
+	c.JSON(http.StatusOK, gin.H{
+		"total": len(result),
+		"tag":   result,
+	})
+}

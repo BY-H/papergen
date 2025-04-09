@@ -42,14 +42,14 @@ func PapersSummary(c *gin.Context) {
 	})
 }
 
-// CreatePaper 创建试卷
-func CreatePaper(c *gin.Context) {
+// AutoCreatePaper 自动创建试卷
+func AutoCreatePaper(c *gin.Context) {
 	c.Get("email")
 }
 
-// EditPaper 编辑试卷
-func EditPaper(c *gin.Context) {
-
+// ManualCreatePaper 手动创造试卷
+func ManualCreatePaper(c *gin.Context) {
+	c.Get("email")
 }
 
 // RemovePaper 移除试卷

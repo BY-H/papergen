@@ -42,8 +42,8 @@ func Router() *gin.Engine {
 		{
 			papers.GET("/list", api.Papers)
 			papers.GET("/summary", api.PapersSummary)
-			papers.POST("/add", api.CreatePaper)
-			papers.PATCH("/edit", api.EditPaper)
+			papers.POST("/auto_create", api.AutoCreatePaper)
+			papers.POST("/manual_create", api.ManualCreatePaper)
 			papers.DELETE("/delete", api.RemovePaper)
 		}
 		// 试题相关
@@ -54,6 +54,7 @@ func Router() *gin.Engine {
 			questions.POST("/add", api.AddQuestion)
 			questions.PATCH("/edit", api.EditQuestion)
 			questions.DELETE("/delete", api.DeleteQuestion)
+			questions.GET("/tags", api.QuestionTags)
 		}
 	}
 
