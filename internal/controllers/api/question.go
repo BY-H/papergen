@@ -102,7 +102,7 @@ func EditQuestion(c *gin.Context) {
 
 	// 先检查问题是否存在且属于该用户
 	var existingQuestion question.Question
-	result := global.DB.Where("creator = ? AND id = ?", email, msg.ID).First(&existingQuestion)
+	result := global.DB.Where("(creator = ? or creator = 'system') AND id = ?", email, msg.ID).First(&existingQuestion)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			c.JSON(http.StatusNotFound, gin.H{"error": "question not found or not owned by user"})
