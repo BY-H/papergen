@@ -86,7 +86,8 @@ func DeleteQuestion(c *gin.Context) {
 
 	global.DB.Where("creator = ?", email).Delete(&question.Question{}, ids)
 	c.JSON(http.StatusOK, gin.H{
-		"msg": "delete question successfully",
+		"status": "ok",
+		"msg":    "delete question successfully",
 	})
 }
 
