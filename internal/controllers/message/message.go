@@ -85,3 +85,11 @@ type ManualCreatePaperMsg struct {
 	Description string `json:"description"`
 	QuestionIds []int  `json:"question_ids"`
 }
+
+type DeletePaperMsg struct {
+	IDs string `json:"paper_ids"`
+}
+
+type ExportPaperMsg struct {
+	ID string `json:"paper_id"`
+}

@@ -3,6 +3,7 @@ module papergen
 go 1.23.5
 
 require (
+	github.com/carmel/gooxml v0.0.0-20220216072414-40ff56130850
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-playground/assert/v2 v2.2.0

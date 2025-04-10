@@ -10,6 +10,8 @@ import (
 	"papergen/internal/global"
 	"papergen/internal/models/paper"
 	"papergen/internal/models/question"
+	"papergen/pkg/utils"
+	"strings"
 )
 
 // Papers 返回用户创建过的试卷
@@ -207,8 +209,59 @@ func ManualCreatePaper(c *gin.Context) {
 
 // DeletePaper 删除试卷
 func DeletePaper(c *gin.Context) {
+	e, _ := c.Get("email")
+	email := e.(string)
+	msg := message.DeletePaperMsg{}
+	err := c.BindJSON(&msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
 
+	temp := strings.Split(msg.IDs, ",")
+	ids, err := utils.StringArrToIntArr(temp)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
+	}
+	global.DB.Where("creator = ?", email).Delete(&paper.Paper{}, ids)
+	c.JSON(http.StatusOK, gin.H{
+		"status": "ok",
+		"msg":    "delete paper successfully",
+	})
 }
 
 // ExportPaper 导出试卷
-func ExportPaper(c *gin.Context) {}
+func ExportPaper(c *gin.Context) {
+	msg := &message.ExportPaperMsg{}
+	err := c.BindJSON(msg)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+	}
+
+	exportPaper := paper.Paper{}
+	if err := global.DB.Where("id = ?", msg.ID).First(&exportPaper).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, message.ErrorResponse(err))
+		return
+	}
+
+	temp := exportPaper.Questions
+	var questionsIds []int
+	err = json.Unmarshal(temp, &questionsIds)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, message.ErrorResponse(err))
+	}
+
+	var questions []question.Question
+	global.DB.Where("id IN ?", questionsIds).Find(&questions)
+
+	err = paper.GenerateDocxPaper(exportPaper.Title, []question.Question{})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename=\""+exportPaper.Title+".docx\"")
+	c.Header("Content-Type", "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+	c.File("tmp/" + exportPaper.Title + ".docx")
+}
