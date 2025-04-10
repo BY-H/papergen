@@ -63,3 +63,20 @@ type AddNotificationMsg struct {
 type AddFeedbackMsg struct {
 	Content string `json:"content"`
 }
+
+type AutoCreatePaperMsg struct {
+	Title             string `json:"title"`
+	Description       string `json:"description"`
+	Tag               string `json:"tag"`
+	SingleChoiceCount int    `json:"single_choice_count"`
+	MultiChoiceCount  int    `json:"multi_choice_count"`
+	TrueFalseCount    int    `json:"true_false_count"`
+	FillBlankCount    int    `json:"fill_blank_count"`
+	ShortAnswerCount  int    `json:"short_answer_count"`
+}
+
+type ManualCreatePaperMsg struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	QuestionIds []int  `json:"question_ids"`
+}

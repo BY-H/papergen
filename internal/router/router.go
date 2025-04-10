@@ -44,7 +44,6 @@ func Router() *gin.Engine {
 			papers.GET("/summary", api.PapersSummary)
 			papers.POST("/auto_create", api.AutoCreatePaper)
 			papers.POST("/manual_create", api.ManualCreatePaper)
-			papers.DELETE("/delete", api.RemovePaper)
 		}
 		// 试题相关
 		questions := authRoutes.Group("/questions")
