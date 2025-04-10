@@ -9,6 +9,11 @@ type RequestMsg struct {
 	PageSize  int    `json:"page_size" form:"page_size" default:"20"`
 }
 
+type GetQuestionMsg struct {
+	RequestMsg
+	QuestionIds []int `json:"question_ids" form:"question_ids[]"`
+}
+
 func ErrorResponse(err error) gin.H {
 	return gin.H{
 		"status": "error",

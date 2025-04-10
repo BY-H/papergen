@@ -15,14 +15,19 @@ import (
 
 func Questions(c *gin.Context) {
 	email, _ := c.Get("email")
-	var msg message.RequestMsg
+	var msg message.GetQuestionMsg
 	err := c.BindQuery(&msg)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return
 	}
 	var questions []question.Question
-	global.DB.Where("creator = ? or creator = 'system'", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&questions)
+	fmt.Printf("%v\n", msg.QuestionIds)
+	if msg.QuestionIds != nil && len(msg.QuestionIds) != 0 {
+		global.DB.Where("creator = ? or creator = 'system'", email).Where(&msg.QuestionIds).Find(&questions)
+	} else {
+		global.DB.Where("creator = ? or creator = 'system'", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&questions)
+	}
 	var count int64
 	global.DB.Model(&question.Question{}).Count(&count)
 	c.JSON(http.StatusOK, gin.H{
