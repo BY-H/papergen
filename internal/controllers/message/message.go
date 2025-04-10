@@ -12,7 +12,7 @@ type RequestMsg struct {
 func ErrorResponse(err error) gin.H {
 	return gin.H{
 		"status": "error",
-		"error":  err,
+		"error":  err.Error(),
 	}
 }
 

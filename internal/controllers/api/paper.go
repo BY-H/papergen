@@ -17,7 +17,7 @@ func Papers(c *gin.Context) {
 	// TODO 添加对应条件的查找功能
 	email, _ := c.Get("email")
 	var msg message.RequestMsg
-	err := c.BindJSON(&msg)
+	err := c.BindQuery(&msg)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
 		return
@@ -26,7 +26,7 @@ func Papers(c *gin.Context) {
 	global.DB.Where("creator = ?", email).Offset(msg.Page - 1).Limit(msg.PageSize).Find(&papers)
 
 	var count int64
-	global.DB.Where("creator = ?", email).Count(&count)
+	global.DB.Model(&paper.Paper{}).Where("creator = ?", email).Count(&count)
 	c.JSON(http.StatusOK, gin.H{
 		"page":      msg.Page,
 		"page_size": msg.PageSize,
@@ -133,7 +133,7 @@ func selectRandomQuestions(email string, msg *message.AutoCreatePaperMsg) ([]int
 		err := global.DB.Model(&question.Question{}).
 			Where("creator = ? or creator = 'system'", email).
 			Where("tag = ?", msg.Tag).
-			Where("type = ?", t.qType).
+			Where("question_type = ?", t.qType).
 			Order("RAND()").
 			Limit(t.count).
 			Pluck("id", &ids).
@@ -204,3 +204,11 @@ func ManualCreatePaper(c *gin.Context) {
 		"paper":   newPaper,
 	})
 }
+
+// DeletePaper 删除试卷
+func DeletePaper(c *gin.Context) {
+
+}
+
+// ExportPaper 导出试卷
+func ExportPaper(c *gin.Context) {}
