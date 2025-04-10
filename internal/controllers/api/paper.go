@@ -234,29 +234,30 @@ func DeletePaper(c *gin.Context) {
 // ExportPaper 导出试卷
 func ExportPaper(c *gin.Context) {
 	msg := &message.ExportPaperMsg{}
-	err := c.BindJSON(msg)
-	if err != nil {
+	if err := c.BindJSON(msg); err != nil {
 		c.JSON(http.StatusBadRequest, message.ErrorResponse(err))
+		return
 	}
 
-	exportPaper := paper.Paper{}
+	var exportPaper paper.Paper
 	if err := global.DB.Where("id = ?", msg.ID).First(&exportPaper).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, message.ErrorResponse(err))
 		return
 	}
 
-	temp := exportPaper.Questions
 	var questionsIds []int
-	err = json.Unmarshal(temp, &questionsIds)
-	if err != nil {
+	if err := json.Unmarshal(exportPaper.Questions, &questionsIds); err != nil {
 		c.JSON(http.StatusInternalServerError, message.ErrorResponse(err))
+		return
 	}
 
 	var questions []question.Question
-	global.DB.Where("id IN ?", questionsIds).Find(&questions)
+	if err := global.DB.Where("id IN ?", questionsIds).Find(&questions).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, message.ErrorResponse(err))
+		return
+	}
 
-	err = paper.GenerateDocxPaper(exportPaper.Title, []question.Question{})
-	if err != nil {
+	if err := paper.GenerateDocxPaper(exportPaper.Title, questions); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

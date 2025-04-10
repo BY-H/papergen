@@ -1,7 +1,6 @@
 package paper
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/carmel/gooxml/document"
 	"github.com/carmel/gooxml/schema/soo/wml"
@@ -64,13 +63,9 @@ func GenerateDocxPaper(title string, questions []question.Question) error {
 
 			// 如果是选择题，解析并写入选项
 			if q.QuestionType == "single_choice" || q.QuestionType == "multiple_choice" {
-				var opts []string
-				_ = json.Unmarshal([]byte(q.Options), &opts)
-				for _, opt := range opts {
-					optP := doc.AddParagraph()
-					optP.Properties().SetStyle("ListBullet")
-					optP.AddRun().AddText(opt)
-				}
+				optP := doc.AddParagraph()
+				optP.Properties().SetStyle("ListBullet")
+				optP.AddRun().AddText(q.Options)
 			}
 		}
 
